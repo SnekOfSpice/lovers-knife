@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5vdbsv8glknj"]
+
+[ext_resource type="Texture2D" uid="uid://gws1567ysxal" path="res://icon.svg" id="1_2pneq"]
+
+[node name="Knife" type="Node2D"]
+
+[node name="Icon" type="Sprite2D" parent="."]
+scale = Vector2(1, 0.328125)
+texture = ExtResource("1_2pneq")
+
+[node name="Icon2" type="Sprite2D" parent="."]
+position = Vector2(-21, -1)
+scale = Vector2(0.28125, 0.539063)
+texture = ExtResource("1_2pneq")

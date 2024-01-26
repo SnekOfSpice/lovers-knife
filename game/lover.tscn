@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dawj4fgy7yo5y"]
+
+[ext_resource type="Script" path="res://game/lover.gd" id="1_be31n"]
+
+[node name="Lover" type="Node2D" groups=["lover"]]
+script = ExtResource("1_be31n")
