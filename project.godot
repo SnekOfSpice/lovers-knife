@@ -17,7 +17,13 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Data="*res://systems/data.tscn"
 GameState="*res://game/game_state.tscn"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
 
 [physics]
 

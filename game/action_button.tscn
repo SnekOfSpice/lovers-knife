@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctfgg0udfa2jc"]
+
+[ext_resource type="Script" path="res://game/action_button.gd" id="1_mulkx"]
+
+[node name="ActionButton" type="TextureButton"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_mulkx")
