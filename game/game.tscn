@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://dbj64rppvkwrb"]
+[gd_scene load_steps=8 format=3 uid="uid://dbj64rppvkwrb"]
 
 [ext_resource type="Script" path="res://game/game.gd" id="1_wxm0k"]
 [ext_resource type="PackedScene" uid="uid://c5vdbsv8glknj" path="res://game/knife.tscn" id="2_w7uxv"]
 [ext_resource type="PackedScene" uid="uid://dawj4fgy7yo5y" path="res://game/lover.tscn" id="3_waygq"]
+[ext_resource type="Texture2D" uid="uid://b2ctl6f2nwmd7" path="res://game/lovers/left.png" id="4_1nyuy"]
+[ext_resource type="Texture2D" uid="uid://c3fnlxmdbofj6" path="res://game/lovers/right.png" id="5_y0dqn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_88srw"]
 size = Vector2(579, 20)
@@ -12,15 +14,27 @@ size = Vector2(224.941, 11.5942)
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_wxm0k")
+flip_duration = 0.16
 
 [node name="Knife" parent="." instance=ExtResource("2_w7uxv")]
-position = Vector2(454, 288)
+position = Vector2(566, 288)
 
 [node name="LoverL" parent="." instance=ExtResource("3_waygq")]
 position = Vector2(93, 328)
 
+[node name="Left" type="Sprite2D" parent="LoverL"]
+position = Vector2(80.0001, -46)
+scale = Vector2(0.398547, 0.398547)
+texture = ExtResource("4_1nyuy")
+
 [node name="LoverR" parent="." instance=ExtResource("3_waygq")]
 position = Vector2(909, 343)
+is_player = true
+
+[node name="Right" type="Sprite2D" parent="LoverR"]
+position = Vector2(27, -84)
+scale = Vector2(0.404676, 0.404676)
+texture = ExtResource("5_y0dqn")
 
 [node name="DiceTray" type="Node2D" parent="."]
 
@@ -109,5 +123,16 @@ text = "turncount
 layout_mode = 2
 text = "del"
 
+[node name="TurnCountLabel" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 538.0
+offset_right = 578.0
+offset_bottom = 23.0
+grow_horizontal = 2
+
+[connection signal="start_rolling_dice" from="LoverL" to="." method="roll_dice"]
+[connection signal="start_rolling_dice" from="LoverR" to="." method="roll_dice"]
 [connection signal="pressed" from="GridContainer/D6" to="." method="roll_dice" binds= ["d6", true]]
 [connection signal="pressed" from="GridContainer/DeleteDiceButton" to="." method="_on_delete_dice_button_pressed"]

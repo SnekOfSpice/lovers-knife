@@ -12,15 +12,24 @@ signal rolled(result:int)
 func get_evaluated_faces() -> Array:
 	var evaluated_faces : = []
 	
+	var face_count := 0
 	for face in faces:
+		if GameState.grasp_of_fate:
+			evaluated_faces.append(0)
+			continue
 		if face is int:
 			evaluated_faces.append(face)
 		elif face is String:
 			match face:
 				"turncount":
-					pass
+					evaluated_faces.append(GameState.turn_count)
 				"copy":
-					pass
+					if GameState.last_faces.is_empty():
+						evaluated_faces.append(face_count + 1)
+					else:
+						evaluated_faces.append(GameState.last_faces[face_count])
+		face_count += 1
+		
 	
 	return evaluated_faces
 
@@ -42,7 +51,9 @@ func get_evaluated_faces() -> Array:
 		#state.linear_velocity = state.linear_velocity - slowdown
 
 func emit_roll():
-	var result = get_evaluated_faces().pick_random()
+	var faces = get_evaluated_faces()
+	var result = faces.pick_random()
+	GameState.last_faces = faces
 	emit_signal("rolled", result)
 	$Label.text = str(result)
 	var t = create_tween()

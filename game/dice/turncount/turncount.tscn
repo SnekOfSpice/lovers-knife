@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://creopsxv25vjh"]
+[gd_scene load_steps=5 format=3 uid="uid://dykutsnvmrh7n"]
 
-[ext_resource type="Script" path="res://game/dice/dice.gd" id="1_ni30m"]
-[ext_resource type="Texture2D" uid="uid://bee0i7nvjeceu" path="res://game/dice/d3/d3.png" id="2_d6g4t"]
+[ext_resource type="Script" path="res://game/dice/dice.gd" id="1_qt0y3"]
+[ext_resource type="Texture2D" uid="uid://dtulxr8pyo3lc" path="res://game/dice/turncount/turncount.png" id="2_npjaw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pp34g"]
 size = Vector2(48, 48)
@@ -9,13 +9,13 @@ size = Vector2(48, 48)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4byo"]
 bg_color = Color(0, 0, 0, 1)
 
-[node name="D3" type="RigidBody2D"]
-script = ExtResource("1_ni30m")
-techId = "d3"
-faces = [1, 2, 3, 1, 2, 3]
+[node name="Turncount" type="RigidBody2D"]
+script = ExtResource("1_qt0y3")
+techId = "turncount"
+faces = ["turncount", 2, "turncount", 4, "turncount", 6]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_d6g4t")
+texture = ExtResource("2_npjaw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_pp34g")

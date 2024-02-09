@@ -4,3 +4,7 @@
 
 [node name="Lover" type="Node2D" groups=["lover"]]
 script = ExtResource("1_be31n")
+
+[node name="DiceContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0

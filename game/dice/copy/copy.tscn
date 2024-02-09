@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://creopsxv25vjh"]
+[gd_scene load_steps=5 format=3 uid="uid://dj5mbp65pdd5u"]
 
-[ext_resource type="Script" path="res://game/dice/dice.gd" id="1_ni30m"]
-[ext_resource type="Texture2D" uid="uid://bee0i7nvjeceu" path="res://game/dice/d3/d3.png" id="2_d6g4t"]
+[ext_resource type="Script" path="res://game/dice/dice.gd" id="1_6yv1g"]
+[ext_resource type="Texture2D" uid="uid://brlmpraclglqw" path="res://game/dice/copy/copy.png" id="2_xuj5q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pp34g"]
 size = Vector2(48, 48)
@@ -9,13 +9,13 @@ size = Vector2(48, 48)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4byo"]
 bg_color = Color(0, 0, 0, 1)
 
-[node name="D3" type="RigidBody2D"]
-script = ExtResource("1_ni30m")
-techId = "d3"
-faces = [1, 2, 3, 1, 2, 3]
+[node name="Copy" type="RigidBody2D"]
+script = ExtResource("1_6yv1g")
+techId = "copy"
+faces = ["copy", "copy", "copy", "copy", "copy", "copy"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_d6g4t")
+texture = ExtResource("2_xuj5q")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_pp34g")
