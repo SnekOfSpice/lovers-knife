@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var techId:String
+@export var tech_id:String
 
 signal use(id)
 

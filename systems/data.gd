@@ -34,6 +34,7 @@ func _ready() -> void:
 	apply("items.all_or_nothing", false)
 	apply("items.grasp_of_fate", false)
 	apply("items.escape_velocity", false)
+	apply("gamestate.can_input", false)
 
 func listen(listener:Node, property:String, immediate_callback:=false):
 	if listeners.has(property):
@@ -53,7 +54,11 @@ func of(property:String, default=0):
 func apply(property:String, value):
 	var old_value = of(property, property)
 	properties[property] = value
-	for listener in listeners.get(property, []):
+	var property_listeners : Array = listeners.get(property, [])
+	for listener in property_listeners:
+		if not is_instance_valid(listener):
+			property_listeners.erase(listener)
+	for listener in property_listeners:
 		listener.property_change(property, value, old_value)
 	
 

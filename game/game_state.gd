@@ -1,7 +1,6 @@
 extends Node
 
-# items
-#var possession := false # dictates if you go during odds (default) or evens (posession)
+var game:Game
 
 var last_faces := []
 var dice_played_this_round := []

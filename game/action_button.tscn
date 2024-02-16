@@ -1,8 +1,27 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctfgg0udfa2jc"]
+[gd_scene load_steps=6 format=3 uid="uid://ctfgg0udfa2jc"]
 
+[ext_resource type="Texture2D" uid="uid://d360s6g3ed1rm" path="res://game/visuals/button_normal.png" id="1_a2isi"]
 [ext_resource type="Script" path="res://game/action_button.gd" id="1_mulkx"]
+[ext_resource type="Texture2D" uid="uid://bun5riqsu4mbb" path="res://game/visuals/button_hover.png" id="2_gv028"]
+[ext_resource type="Texture2D" uid="uid://dtm8lfj87jswq" path="res://game/visuals/button_disabled.png" id="3_wnuvq"]
+[ext_resource type="Texture2D" uid="uid://baqu6hrmxcf0y" path="res://game/dice/pi/pi.png" id="5_omg10"]
 
 [node name="ActionButton" type="TextureButton"]
 offset_right = 40.0
 offset_bottom = 40.0
+focus_mode = 0
+texture_normal = ExtResource("1_a2isi")
+texture_hover = ExtResource("2_gv028")
+texture_disabled = ExtResource("3_wnuvq")
 script = ExtResource("1_mulkx")
+
+[node name="IconTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 53.0
+offset_bottom = 53.0
+mouse_filter = 2
+texture = ExtResource("5_omg10")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

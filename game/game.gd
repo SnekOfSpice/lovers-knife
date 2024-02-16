@@ -1,4 +1,5 @@
 extends Control
+class_name Game
 
 var round := 0
 
@@ -16,9 +17,12 @@ func _ready() -> void:
 	Data.listen(self, "items.escape_velocity", true)
 	Data.listen(self, "damage_right")
 	Data.listen(self, "damage_left")
+	Data.listen(self, "gamestate.can_input", true)
 	
 	start_game()
 	$EndTexture.visible = false
+	
+	GameState.game = self
 
 func restart():
 	start_game()
@@ -48,6 +52,8 @@ func property_change(property: String, new_value, old_value):
 			update_label()
 			if new_value >= 2:
 				end_game()
+		"gamestate.can_input":
+			pass
 
 func get_current_lover():
 	if Data.of("gamestate.turn_count") % 2 == 0:
@@ -113,10 +119,10 @@ func distribute_dice():
 
 func start_turn():
 	Data.change_by_int("gamestate.turn_count", 1)
-	if not $LoverL.has_dice_left() and not $LoverR.has_dice_left():
+	if $LoverL.is_dice_inventory_empty() and $LoverR.is_dice_inventory_empty():
 		distribute_dice()
 	
-	if not get_current_lover().has_dice():
+	if get_current_lover().is_dice_inventory_empty():
 		refill_dice(get_current_lover())
 	
 	distribute_items($LoverL, 2)
@@ -129,7 +135,7 @@ func start_turn():
 		#distribute_items($LoverR, 4)
 	
 	if Data.of("gamestate.is_player_turn"):
-		pass
+		Data.apply("gamestate.can_input", true)
 	else:
 		$LoverL.evaluate_gamestate()
 
@@ -162,8 +168,8 @@ func distribute_items(lover: Lover, item_count):
 func is_even(a:int):
 	return a % 2 == 0
 
-func roll_dice(techId:String, toRight:bool):
-	var dice : Dice = load(str("res://game/dice/", techId, "/", techId, ".tscn")).instantiate()
+func roll_dice(tech_id:String, toRight:bool):
+	var dice : Dice = load(str("res://game/dice/", tech_id, "/", tech_id, ".tscn")).instantiate()
 	var topL:Vector2
 	var bottomR:Vector2
 	if toRight:
@@ -177,12 +183,12 @@ func roll_dice(techId:String, toRight:bool):
 	add_child(dice)
 	dice.connect("rolled", spin_knife)
 	dice.roll(toRight)
-	GameState.dice_played_this_round.append(techId)
+	GameState.dice_played_this_round.append(tech_id)
 
-func use_item(techId:String):
-	prints("using ", techId)
-	prints("xsing ", "possession", techId == "possession")
-	match techId:
+func use_item(tech_id:String):
+	prints("using ", tech_id)
+	prints("xsing ", "possession", tech_id == "possession")
+	match tech_id:
 		"possession":
 			Data.apply("items.possession", not Data.of("items.possession", false))
 		"all_or_nothing":

@@ -11,7 +11,7 @@ bg_color = Color(0, 0, 0, 1)
 
 [node name="Fibonacci" type="RigidBody2D"]
 script = ExtResource("1_yfunl")
-techId = "fibonacci"
+tech_id = "fibonacci"
 faces = [0, 1, 1, 2, 3, 5]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

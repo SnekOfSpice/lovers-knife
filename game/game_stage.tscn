@@ -21,3 +21,4 @@ mouse_filter = 2
 color = Color(0.0862745, 0.0862745, 0.113725, 1)
 
 [node name="Game" parent="." instance=ExtResource("1_r4706")]
+layout_mode = 1
