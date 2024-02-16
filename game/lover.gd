@@ -32,6 +32,9 @@ func has_item(tech_id:String) -> bool:
 func erase_all_items():
 	for c in find_child("ItemContainer").get_children():
 		c.queue_free()
+func erase_all_dice():
+	for c in find_child("DiceContainer").get_children():
+		c.queue_free()
 
 func _ready() -> void:
 	if is_player:
@@ -131,6 +134,7 @@ func get_action_plan_from_gamestate() -> Array:
 	
 	# if has turncount dice and is possessed rn, try to unpossess depending on uhhh
 	
+	# if candle in inventory, and the next dice is <50% to result in desired outcome, use candle
 	
 	# chance to reach escape velocity
 	
@@ -140,8 +144,10 @@ func do_stuff():
 	var i := 0
 	var action_plan = get_action_plan_from_gamestate()
 	while i < action_plan.size() - 1:
+		await get_tree().create_timer(0.5).timeout
 		use_item_by_id(action_plan[i])
 		i += 1
+	await get_tree().create_timer(0.5).timeout
 	use_dice_by_id(action_plan.back())
 
 func get_best_dice_id(for_even:bool):

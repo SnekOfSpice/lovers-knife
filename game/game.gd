@@ -93,7 +93,9 @@ func prepare_next_round():
 	GameState.reset_between_rounds()
 	$Knife.position = $KnifeCenterPosition.position
 	$LoverL.erase_all_items()
+	$LoverL.erase_all_dice()
 	$LoverR.erase_all_items()
+	$LoverR.erase_all_dice()
 
 func start_game():
 	GameState.reset_between_rounds()
@@ -169,11 +171,11 @@ func distribute_items(lover: Lover, item_count):
 func is_even(a:int):
 	return a % 2 == 0
 
-func roll_dice(tech_id:String, toRight:bool):
+func roll_dice(tech_id:String, fromRight:bool):
 	var dice : Dice = load(str("res://game/dice/", tech_id, "/", tech_id, ".tscn")).instantiate()
 	var topL:Vector2
 	var bottomR:Vector2
-	if toRight:
+	if not fromRight:
 		topL = find_child("BoundsLeft").get_child(0).global_position
 		bottomR = find_child("BoundsLeft").get_child(1).global_position
 	else:
@@ -183,7 +185,7 @@ func roll_dice(tech_id:String, toRight:bool):
 	dice.global_position = startPos
 	add_child(dice)
 	dice.connect("rolled", spin_knife)
-	dice.roll(toRight)
+	dice.roll(fromRight)
 	GameState.dice_played_this_round.append(tech_id)
 
 func use_item(tech_id:String):
