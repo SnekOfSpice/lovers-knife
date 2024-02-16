@@ -41,7 +41,7 @@ func show_action_label(action_button:ActionButton):
 	if action_button.action_type == ActionButton.Actions.Dice:
 		var description := ""
 		
-		var eval = GameState.get_evaluated_faces(Data.faces.get(action_button.tech_id, []))
+		var eval = GameState.get_evaluated_faces(action_button.tech_id)
 		for e in eval:
 			description += str(" [", e, "] ")
 		
@@ -69,6 +69,7 @@ func add_to_dice_inventory(tech_id:String):
 	button.connect("mouse_entered", show_action_label.bind(button))
 	button.connect("mouse_exited", hide_action_label)
 	button.connect("pressed", hide_action_label)
+	button.connect("set_info_text", GameState.game.set_info_text)
 	button.owned_by_player = is_player
 	find_child("DiceContainer").add_child(button)
 
@@ -82,6 +83,7 @@ func add_to_item_inventory(tech_id:String):
 	button.connect("mouse_entered", show_action_label.bind(button))
 	button.connect("mouse_exited", hide_action_label)
 	button.connect("pressed", hide_action_label)
+	button.connect("set_info_text", GameState.game.set_info_text)
 	button.owned_by_player = is_player
 	find_child("ItemContainer").add_child(button)
 
@@ -113,13 +115,34 @@ func use_dice_by_id(tech_id:String):
 func is_dice_inventory_empty() -> bool:
 	return get_held_dice().size() == 0
 
-func evaluate_gamestate():
+## returns an action plan. the last item will be a dice, all others will be items
+func get_action_plan_from_gamestate() -> Array:
+	var action_plan := []
 	# TODO: replace with actual logic
-	roll_dice(get_held_dice().pick_random())
 	
 	var aim_for_even : bool = GameState.game.is_knife_pointing_right()
 	
 	if aim_for_even and has_item("grasp_of_fate"):
-		pass
+		action_plan.append("grasp_of_fate")
+		action_plan.append(get_held_dice_ids().pick_random())
+		return action_plan
+	
+	action_plan.append(get_held_dice_ids().pick_random())
 	
 	# if has turncount dice and is possessed rn, try to unpossess depending on uhhh
+	
+	
+	# chance to reach escape velocity
+	
+	return action_plan
+
+func do_stuff():
+	var i := 0
+	var action_plan = get_action_plan_from_gamestate()
+	while i < action_plan.size() - 1:
+		use_item_by_id(action_plan[i])
+		i += 1
+	use_dice_by_id(action_plan.back())
+
+func get_best_dice_id(for_even:bool):
+	pass

@@ -28,7 +28,7 @@ signal rolled(result:int)
 		#state.linear_velocity = state.linear_velocity - slowdown
 
 func emit_roll():
-	var faces = GameState.get_evaluated_faces(Data.faces.get(tech_id))
+	var faces = GameState.get_evaluated_faces(tech_id)
 	var result = faces.pick_random()
 	GameState.last_faces = faces
 	emit_signal("rolled", result)

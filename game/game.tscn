@@ -1,12 +1,14 @@
-[gd_scene load_steps=13 format=3 uid="uid://dbj64rppvkwrb"]
+[gd_scene load_steps=15 format=3 uid="uid://dbj64rppvkwrb"]
 
 [ext_resource type="Script" path="res://game/game.gd" id="1_wxm0k"]
+[ext_resource type="Texture2D" uid="uid://b8uo3wv7fn63w" path="res://game/visuals/characters.png" id="2_i46jd"]
 [ext_resource type="PackedScene" uid="uid://c5vdbsv8glknj" path="res://game/knife.tscn" id="2_w7uxv"]
 [ext_resource type="PackedScene" uid="uid://dawj4fgy7yo5y" path="res://game/lover.tscn" id="3_waygq"]
 [ext_resource type="Texture2D" uid="uid://b2ctl6f2nwmd7" path="res://game/lovers/left.png" id="4_1nyuy"]
 [ext_resource type="Texture2D" uid="uid://c3fnlxmdbofj6" path="res://game/lovers/right.png" id="5_y0dqn"]
 [ext_resource type="PackedScene" uid="uid://dt1jv1jvaegk2" path="res://game/visuals/round_transition.tscn" id="6_t0us0"]
 [ext_resource type="Texture2D" uid="uid://c583foy7oygdk" path="res://game/items/possession/possession.png" id="7_lr4np"]
+[ext_resource type="Texture2D" uid="uid://b1pqxmirw4y1c" path="res://game/visuals/characters_top.png" id="7_ws8tq"]
 [ext_resource type="Texture2D" uid="uid://c3yycd3oi0wtl" path="res://game/items/all_or_nothing/all_or_nothing.png" id="8_1uia3"]
 [ext_resource type="Texture2D" uid="uid://884o8m24qg68" path="res://game/items/escape_velocity/escape_velocity.png" id="9_uc7k8"]
 [ext_resource type="Texture2D" uid="uid://b1kl3twvtiv7e" path="res://game/items/grasp_of_fate/grasp_of_fate.png" id="10_bpax3"]
@@ -27,30 +29,43 @@ grow_vertical = 2
 script = ExtResource("1_wxm0k")
 flip_duration = 0.16
 
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_i46jd")
+
 [node name="KnifeCenterPosition" type="Node2D" parent="."]
-position = Vector2(554, 296)
+position = Vector2(625, 305)
 
 [node name="Knife" parent="." instance=ExtResource("2_w7uxv")]
 position = Vector2(566, 288)
 
 [node name="Left" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(140, 189)
 scale = Vector2(0.398547, 0.398547)
 texture = ExtResource("4_1nyuy")
 
 [node name="Right" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(1024, 184)
 scale = Vector2(0.404676, 0.404676)
 texture = ExtResource("5_y0dqn")
 
+[node name="Top" type="Sprite2D" parent="."]
+texture = ExtResource("7_ws8tq")
+centered = false
+
 [node name="LoverL" parent="." instance=ExtResource("3_waygq")]
-position = Vector2(93, 328)
+position = Vector2(93, 489)
 
 [node name="LoverR" parent="." instance=ExtResource("3_waygq")]
-position = Vector2(909, 343)
+position = Vector2(909, 504)
 is_player = true
 
 [node name="DiceTray" type="Node2D" parent="."]
+position = Vector2(91, 15)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="DiceTray"]
 
@@ -82,20 +97,22 @@ shape = SubResource("RectangleShape2D_rrry6")
 [node name="DiceSpawnAreas" type="Node2D" parent="."]
 
 [node name="BoundsLeft" type="Node2D" parent="DiceSpawnAreas"]
+position = Vector2(94, 17)
 
 [node name="TopLeft" type="Node2D" parent="DiceSpawnAreas/BoundsLeft"]
-position = Vector2(307, 477)
+position = Vector2(344, 480)
 
 [node name="BottomR" type="Node2D" parent="DiceSpawnAreas/BoundsLeft"]
-position = Vector2(390, 591)
+position = Vector2(368, 589)
 
 [node name="BoundsRight" type="Node2D" parent="DiceSpawnAreas"]
+position = Vector2(50, 5)
 
 [node name="TopLeft" type="Node2D" parent="DiceSpawnAreas/BoundsRight"]
-position = Vector2(710, 469)
+position = Vector2(792, 474)
 
 [node name="BottomRight" type="Node2D" parent="DiceSpawnAreas/BoundsRight"]
-position = Vector2(820, 595)
+position = Vector2(776, 595)
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 0
@@ -202,6 +219,15 @@ texture = ExtResource("9_uc7k8")
 [node name="GraspOfFate" type="TextureRect" parent="StatusContainer"]
 layout_mode = 2
 texture = ExtResource("10_bpax3")
+
+[node name="InfoTextLabel" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(400, 130)
+layout_mode = 0
+offset_left = 442.0
+offset_top = 478.0
+offset_right = 842.0
+offset_bottom = 608.0
+bbcode_enabled = true
 
 [connection signal="start_rolling_dice" from="LoverL" to="." method="roll_dice"]
 [connection signal="start_use_item" from="LoverL" to="." method="use_item"]

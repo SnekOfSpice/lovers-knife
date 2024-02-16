@@ -1,14 +1,65 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5vdbsv8glknj"]
+[gd_scene load_steps=11 format=3 uid="uid://c5vdbsv8glknj"]
 
-[ext_resource type="Texture2D" uid="uid://gws1567ysxal" path="res://icon.svg" id="1_2pneq"]
+[ext_resource type="Texture2D" uid="uid://u6no6xpwgoup" path="res://game/visuals/knife.png" id="1_uy02k"]
+[ext_resource type="Script" path="res://game/knife.gd" id="2_7g7xd"]
 
-[node name="Knife" type="Node2D"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_xtfnx"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 0, 464, 86)
 
-[node name="Icon" type="Sprite2D" parent="."]
-scale = Vector2(1, 0.328125)
-texture = ExtResource("1_2pneq")
+[sub_resource type="AtlasTexture" id="AtlasTexture_0wfay"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 86, 464, 86)
 
-[node name="Icon2" type="Sprite2D" parent="."]
-position = Vector2(-21, -1)
-scale = Vector2(0.28125, 0.539063)
-texture = ExtResource("1_2pneq")
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5svm"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 172, 464, 86)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yo8jf"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 258, 464, 86)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uwsqd"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 344, 464, 86)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q102n"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 430, 464, 86)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84k8t"]
+atlas = ExtResource("1_uy02k")
+region = Rect2(0, 516, 464, 86)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8x44u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xtfnx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0wfay")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b5svm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yo8jf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uwsqd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q102n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_84k8t")
+}],
+"loop": false,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="Sprite" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_8x44u")
+script = ExtResource("2_7g7xd")

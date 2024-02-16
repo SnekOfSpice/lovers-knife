@@ -9,6 +9,7 @@ var dice := ["copy", "d3", "d6", "fibonacci", "pi", "turncount"]
 var items := ["all_or_nothing", "grasp_of_fate", "escape_velocity", "possession", "candle"]
 
 func _ready() -> void:
+	GameState.game = self
 	Data.listen(self, "gamestate.turn_count")
 	Data.listen(self, "gamestate.goal_turn_count")
 	Data.listen(self, "items.possession", true)
@@ -22,7 +23,7 @@ func _ready() -> void:
 	start_game()
 	$EndTexture.visible = false
 	
-	GameState.game = self
+	
 
 func restart():
 	start_game()
@@ -137,7 +138,7 @@ func start_turn():
 	if Data.of("gamestate.is_player_turn"):
 		Data.apply("gamestate.can_input", true)
 	else:
-		$LoverL.evaluate_gamestate()
+		$LoverL.do_stuff()
 
 func refill_dice(lover:Lover):
 	var unheld = get_unheld_dice_ids()
@@ -201,33 +202,42 @@ func use_item(tech_id:String):
 			Data.apply("items.grasp_of_fate", true)
 
 func is_knife_pointing_right() -> bool:
-	return $Knife.rotation == 0 # at player
+	return $Knife.is_pointing_right()
+
+func set_info_text(text:String):
+	$InfoTextLabel.text = str("[center]", text, "[/center]")
 
 func spin_knife(flip_count:int):
 	var t = create_tween()
-	var rolling_delay := 0.5
+	var rolling_delay := 0.5 # rolling float to offset flips beyond the first
 	t.set_parallel(true)
 	var start_pointing_right = is_knife_pointing_right()
 	if Data.of("items.all_or_nothing"):
 		if is_even(flip_count):
 			if not start_pointing_right:
-				t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
+				t.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
+				#t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
 		else:
 			if start_pointing_right:
-				t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
+				t.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
+				#t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
 	else:
 		for i in flip_count:
 			if start_pointing_right:
 				if is_even(i):
-					t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
+					t.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
+					#t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
 				else:
-					t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
+					t.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
+					#t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
 			else:
 				if is_even(i):
-					t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
+					t.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
+					#t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
 				else:
-					t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
-			rolling_delay += 2 * flip_duration
+					t.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
+					#t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
+			rolling_delay += 2 * $Knife.get_flip_duration_sec()
 	t.tween_callback(post_spin_evaluation.bind(flip_count)).set_delay(rolling_delay)
 
 func reset_after_spin():

@@ -10,6 +10,8 @@ var tech_id := ""
 var action_type:int
 var owned_by_player := false
 
+signal set_info_text(text:String)
+
 func _ready() -> void:
 	Data.listen(self, "gamestate.can_input", true)
 
@@ -31,3 +33,23 @@ func set_id(tech_id:String, action_type:int):
 func _on_pressed() -> void:
 	if action_type == Actions.Dice:
 		Data.apply("gamestate.can_input", false)
+
+
+func _on_mouse_entered() -> void:
+	var text := ""
+	if action_type == ActionButton.Actions.Dice:
+		
+		var eval = GameState.get_evaluated_faces(tech_id)
+		for e in eval:
+			text += str(" [", e, "] ")
+		
+		text += str("\n", Data.dice_descriptions.get(tech_id, ""))
+	elif action_type == ActionButton.Actions.Item:
+		text = Data.item_descriptions.get(tech_id, "")
+	
+	emit_signal("set_info_text", text)
+
+
+
+func _on_mouse_exited() -> void:
+	emit_signal("set_info_text", "")

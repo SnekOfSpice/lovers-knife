@@ -57,8 +57,7 @@ func apply(property:String, value):
 	var property_listeners : Array = listeners.get(property, [])
 	for listener in property_listeners:
 		if not is_instance_valid(listener):
-			property_listeners.erase(listener)
-	for listener in property_listeners:
+			continue
 		listener.property_change(property, value, old_value)
 	
 

@@ -23,7 +23,8 @@ func reset_between_rounds():
 
 
 ## returns an Array based on the current gamestate
-func get_evaluated_faces(faces:Array) -> Array:
+func get_evaluated_faces(tech_id:String) -> Array:
+	var faces = Data.faces.get(tech_id)
 	var evaluated_faces : = []
 	var face_count := 0
 	for face in faces:
@@ -44,3 +45,11 @@ func get_evaluated_faces(faces:Array) -> Array:
 		face_count += 1
 	
 	return evaluated_faces
+
+func get_expected_value(tech_id:String) -> float:
+	var faces = get_evaluated_faces(tech_id)
+	var ev:float
+	for face in faces:
+		ev += face
+	ev /= float(faces.size())
+	return ev
