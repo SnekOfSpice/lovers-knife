@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Lovers-knife"
-run/main_scene="res://game/game_stage.tscn"
+run/main_scene="res://systems/main_menu.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Data="*res://systems/data.tscn"
 GameState="*res://game/game_state.tscn"
+Sound="*res://systems/sound.tscn"
 
 [display]
 

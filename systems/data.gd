@@ -1,10 +1,10 @@
 extends Node
 
 var item_descriptions := {
-	"escape_velocity":"When the knife reaches escape velocity, point it at your lover.",
+	"escape_velocity":"Reaching terminal velocity stabs your lover.",
 	"grasp_of_fate":"Replaces all dice faces with 0 on the next roll.",
-	"all_or_nothing":"evens: knife points at you. odds: knife points at lover.",
-	"possession":"change when you go",
+	"all_or_nothing":"Evens: Knife points at you.\nOdds: Knife points at lover.",
+	"possession":"Changes who takes even turns.\nActivate again to dispel possession.",
 	"candle":"Prolongs the round by one turn. Dice are redistributed when the last one is rolled."
 }
 

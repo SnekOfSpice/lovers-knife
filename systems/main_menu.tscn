@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cooiohvcufb2p"]
+[gd_scene load_steps=4 format=3 uid="uid://cooiohvcufb2p"]
 
+[ext_resource type="Theme" uid="uid://cvey57ytjvvd7" path="res://game/visuals/theme.tres" id="1_hbwgb"]
 [ext_resource type="Script" path="res://systems/main_menu.gd" id="1_wyxql"]
+[ext_resource type="Texture2D" uid="uid://c4bfjenk55grm" path="res://game/visuals/main_menu.png" id="3_ue1pd"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -9,43 +11,45 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_hbwgb")
 script = ExtResource("1_wyxql")
 
-[node name="TextureRect" type="ColorRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+texture = ExtResource("3_ue1pd")
 
 [node name="SinglePlayerButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 233.0
-offset_top = 170.0
-offset_right = 260.0
-offset_bottom = 201.0
+offset_left = 392.0
+offset_top = 131.0
+offset_right = 520.0
+offset_bottom = 167.0
 focus_mode = 0
-text = "1P"
+text = "Solitarily"
 
 [node name="MultiplayerButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 887.0
-offset_top = 170.0
-offset_right = 914.0
-offset_bottom = 201.0
+offset_left = 405.0
+offset_top = 322.0
+offset_right = 539.0
+offset_bottom = 358.0
 focus_mode = 0
-text = "2P"
+text = "Together"
 
 [node name="QuitButton" type="Button" parent="."]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 0
-offset_left = 571.0
-offset_top = 423.0
-offset_right = 612.0
-offset_bottom = 454.0
+offset_left = 448.0
+offset_top = 635.0
+offset_right = 748.0
+offset_bottom = 671.0
 focus_mode = 0
-text = "Sink"
+text = "Suture this wound"
 
 [connection signal="pressed" from="SinglePlayerButton" to="." method="start_game" binds= [true]]
 [connection signal="pressed" from="MultiplayerButton" to="." method="start_game" binds= [false]]

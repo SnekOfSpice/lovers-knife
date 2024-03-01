@@ -1,5 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://dbj64rppvkwrb"]
+[gd_scene load_steps=16 format=3 uid="uid://dbj64rppvkwrb"]
 
+[ext_resource type="Theme" uid="uid://cvey57ytjvvd7" path="res://game/visuals/theme.tres" id="1_1jcr5"]
 [ext_resource type="Script" path="res://game/game.gd" id="1_wxm0k"]
 [ext_resource type="Texture2D" uid="uid://b8uo3wv7fn63w" path="res://game/visuals/characters.png" id="2_i46jd"]
 [ext_resource type="PackedScene" uid="uid://c5vdbsv8glknj" path="res://game/knife.tscn" id="2_w7uxv"]
@@ -26,6 +27,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_1jcr5")
 script = ExtResource("1_wxm0k")
 flip_duration = 0.16
 
@@ -115,6 +117,7 @@ position = Vector2(792, 474)
 position = Vector2(776, 595)
 
 [node name="Cheats" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -245,20 +248,29 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="RestartButton" type="Button" parent="EndTexture"]
+[node name="HBoxContainer" type="HBoxContainer" parent="EndTexture"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -43.5
-offset_top = -31.0
-offset_right = 43.5
+offset_left = -32.5
+offset_top = -40.0
+offset_right = 32.5
 grow_horizontal = 2
 grow_vertical = 0
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="EndTexture/HBoxContainer"]
+layout_mode = 2
 focus_mode = 0
 text = "Restart"
+
+[node name="MainMenuButton" type="Button" parent="EndTexture/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Main Menu"
 
 [node name="StatusContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -296,22 +308,24 @@ offset_bottom = 608.0
 bbcode_enabled = true
 
 [node name="DiceInfoL" type="RichTextLabel" parent="."]
-custom_minimum_size = Vector2(130, 40)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 0
 offset_left = 388.0
 offset_top = 398.0
 offset_right = 518.0
 offset_bottom = 438.0
 bbcode_enabled = true
+fit_content = true
 
 [node name="DiceInfoR" type="RichTextLabel" parent="."]
-custom_minimum_size = Vector2(130, 40)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 0
-offset_left = 768.0
+offset_left = 717.0
 offset_top = 398.0
-offset_right = 898.0
+offset_right = 917.0
 offset_bottom = 438.0
 bbcode_enabled = true
+fit_content = true
 
 [connection signal="start_rolling_dice" from="LoverL" to="." method="roll_dice"]
 [connection signal="start_use_item" from="LoverL" to="." method="use_item"]
@@ -326,4 +340,5 @@ bbcode_enabled = true
 [connection signal="pressed" from="Cheats/GridContainer2/Possession" to="." method="use_item" binds= ["possession"]]
 [connection signal="end_reached" from="RoundTransition" to="." method="_on_round_transition_end_reached"]
 [connection signal="middle_reached" from="RoundTransition" to="." method="_on_round_transition_middle_reached"]
-[connection signal="pressed" from="EndTexture/RestartButton" to="." method="restart"]
+[connection signal="pressed" from="EndTexture/HBoxContainer/RestartButton" to="." method="restart"]
+[connection signal="pressed" from="EndTexture/HBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

@@ -32,6 +32,7 @@ func has_item(tech_id:String) -> bool:
 func erase_all_items():
 	for c in find_child("ItemContainer").get_children():
 		c.queue_free()
+
 func erase_all_dice():
 	for c in find_child("DiceContainer").get_children():
 		c.queue_free()
@@ -132,6 +133,17 @@ func get_action_plan_from_gamestate() -> Array:
 	
 	var aim_for_even : bool = GameState.game.is_knife_pointing_right()
 	
+	# if escape velocity in favor, find the one dice with the highest expected value
+	if Data.of("gamestate.escape_velocity_points_at_player"):
+		var highest_ev := 0
+		var best_dice
+		for dice in get_held_dice_ids():
+			var ev = GameState.get_expected_value(dice)
+			if ev > highest_ev:
+				best_dice = dice
+		action_plan.append(best_dice)
+		return action_plan
+	
 	if aim_for_even and has_item("grasp_of_fate"):
 		action_plan.append("grasp_of_fate")
 		action_plan.append(get_held_dice_ids().pick_random())
@@ -154,6 +166,9 @@ func get_action_plan_from_gamestate() -> Array:
 	
 	
 	# if has turncount dice and is possessed rn, try to unpossess depending on uhhh
+	if has_item("possession"):
+		if randf() < 0.6:
+			action_plan.append("possession")
 	
 	# if candle in inventory, and all held dice are <50% to result in desired outcome, use candle
 	# aka: if you have one dice that is >50% likely to have the desired directional outcome, don't use a candle
@@ -188,6 +203,18 @@ func get_action_plan_from_gamestate() -> Array:
 			return action_plan
 	
 	action_plan.append(get_held_dice_ids().pick_random())
+	
+	var chances = chances_for_even()
+	if aim_for_even:
+		for dice in chances:
+			if chances.get(dice) > 0.5:
+				action_plan.append(dice)
+				break
+	else:
+		for dice in chances:
+			if chances.get(dice) < 0.5:
+				action_plan.append(dice)
+				break
 	return action_plan
 
 func do_stuff():

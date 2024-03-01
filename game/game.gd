@@ -12,7 +12,6 @@ var knife_rotation_tween:Tween
 
 func _ready() -> void:
 	GameState.game = self
-	Data.apply("game.singleplayer", false)
 	Data.listen(self, "gamestate.turn_count")
 	Data.listen(self, "gamestate.goal_turn_count")
 	Data.listen(self, "items.possession", true)
@@ -30,8 +29,12 @@ func _ready() -> void:
 	
 
 func restart():
-	start_game()
 	$EndTexture.visible = false
+	$LoverL.erase_all_items()
+	$LoverR.erase_all_items()
+	$LoverL.erase_all_dice()
+	$LoverR.erase_all_dice()
+	start_game()
 
 func property_change(property: String, new_value, old_value):
 	printt(property, new_value, old_value)
@@ -61,43 +64,56 @@ func property_change(property: String, new_value, old_value):
 		"knife.rotations":
 			update_label()
 			if Data.of("items.escape_velocity") and new_value >= GameState.EscapeVelocityGoal:
-				knife_rotation_tween.stop()
-				if Data.of("gamestate.is_player_turn"):
-					$Knife.connect("finish_rotation", stab)
-					$Knife.set_pointing(false)
-				else:
-					$Knife.connect("finish_rotation", stab)
-					$Knife.set_pointing(true)
-				print("escape")
+				if knife_rotation_tween:
+					knife_rotation_tween.stop()
+				#if Data.of("gamestate.is_player_turn"):
+				$Knife.connect("finish_rotation", stab)
+				$Knife.set_pointing(Data.of("gamestate.escape_velocity_points_at_player"))
+				#else:
+					#$Knife.connect("finish_rotation", stab)
+					#$Knife.set_pointing(true)
+				#print("escape")
 		"gamestate.can_input":
 			pass
 
 func get_current_lover():
-	if Data.of("gamestate.turn_count") % 2 == 0:
-		if Data.of("items.possessed"):
-			return $LoverR
-		else:
-			return $LoverL
+	if Data.of("gamestate.is_player_turn"):
+		return $LoverR
 	else:
-		if Data.of("items.possessed"):
-			return $LoverL
-		else:
-			return $LoverR
+		return $LoverL
+	#if Data.of("gamestate.turn_count") % 2 == 0:
+		#if Data.of("items.possessed"):
+			#return $LoverR
+		#else:
+			#return $LoverL
+	#else:
+		#if Data.of("items.possessed"):
+			#return $LoverL
+		#else:
+			#return $LoverR
 
 func update_label():
 	var label :Label= find_child("TurnCountLabel")
 	label.text = str(Data.of("gamestate.turn_count"), "/", Data.of("gamestate.goal_turn_count"))
 	label.text += "\n"
-	label.text += "Player on Evens" if Data.of("items.possession") else "Player on Odds"
+	label.text += "Odds | Evens" if Data.of("items.possession") else "Evens | Odds"
 	label.text += "\n"
-	label.text += str(Data.of("knife.rotations"))
+	if Data.of("gamestate.round_count") > 0:
+		label.text += str(Data.of("knife.rotations"))
 	if Data.of("items.escape_velocity"):
-		label.text += str(" (", "Escaping at ", GameState.EscapeVelocityGoal, ")")
+		var direction:String
+		if Data.of("gamestate.escape_velocity_points_at_player"):
+			direction = ">>"
+		else:
+			direction = "<<"
+		label.text += str(" (", "Terminal at ", GameState.EscapeVelocityGoal, ")")
+		label.text += str("\n", direction)
 	label.text += "\n"
 	var damage_string := ""
 	for i in Data.of("damage_left"):
 		damage_string += "X"
-	damage_string += "|"
+	if Data.of("damage_left") > 0 or Data.of("damage_right") > 0:
+		damage_string += "|"
 	for i in Data.of("damage_right"):
 		damage_string += "X"
 	label.text += damage_string
@@ -110,17 +126,20 @@ func end_game():
 		$EndTexture.texture = load("res://game/visuals/end_die.png")
 
 func prepare_next_round():
-	Data.change_by_int("gamestate.round_count", 1)
+	Data.apply("gamestate.turn_count", 0)
+	Data.apply("knife.rotations", 0)
 	GameState.reset_between_rounds()
 	$Knife.position = $KnifeCenterPosition.position
 	$LoverL.erase_all_items()
 	$LoverL.erase_all_dice()
 	$LoverR.erase_all_items()
 	$LoverR.erase_all_dice()
+	update_label()
 
 func start_game():
 	Data.apply("damage_left", 0)
 	Data.apply("damage_right", 0)
+	Data.apply("gamestate.round_count", 0)
 	GameState.reset_between_rounds()
 	# auto start in first round, in subsequent rounds the transition will call this instead
 	prepare_next_round()
@@ -128,8 +147,6 @@ func start_game():
 		
 
 func start_round():
-	Data.apply("gamestate.turn_count", 0)
-	Data.apply("knife.rotations", 0)
 	start_turn()
 
 func distribute_dice():
@@ -152,19 +169,20 @@ func start_turn():
 	if get_current_lover().is_dice_inventory_empty():
 		refill_dice(get_current_lover())
 	
-	distribute_items($LoverL, 2)
-	distribute_items($LoverR, 2)
-	#if Data.of("round_count") == 1:
-		#distribute_items($LoverL, 2)
-		#distribute_items($LoverR, 2)
-	#elif Data.of("round_count") >= 2:
-		#distribute_items($LoverL, 4)
-		#distribute_items($LoverR, 4)
+	#distribute_items($LoverL, 2)
+	#distribute_items($LoverR, 2)
+	if Data.of("gamestate.round_count") == 1:
+		distribute_items($LoverL, 1)
+		distribute_items($LoverR, 1)
+	elif Data.of("gamestate.round_count") >= 2:
+		distribute_items($LoverL, 3)
+		distribute_items($LoverR, 3)
 	
 	if Data.of("gamestate.is_player_turn"):
 		Data.apply("gamestate.can_input", true)
 	else:
 		if Data.of("game.singleplayer"):
+			await get_tree().create_timer(2.0).timeout
 			$LoverL.do_stuff()
 		else:
 			Data.apply("gamestate.can_input", true)
@@ -216,14 +234,13 @@ func roll_dice(tech_id:String, fromRight:bool):
 	GameState.dice_played_this_round.append(tech_id)
 
 func use_item(tech_id:String):
-	prints("using ", tech_id)
-	prints("xsing ", "possession", tech_id == "possession")
 	match tech_id:
 		"possession":
 			Data.apply("items.possession", not Data.of("items.possession", false))
 		"all_or_nothing":
 			Data.apply("items.all_or_nothing", true)
 		"escape_velocity":
+			Data.apply("gamestate.escape_velocity_points_at_player", not Data.of("gamestate.is_player_turn"))
 			Data.apply("items.escape_velocity", true)
 		"candle":
 			Data.change_by_int("gamestate.goal_turn_count", 1)
@@ -261,6 +278,16 @@ func spin_knife(flip_count:int):
 		if Data.of("knife.rotations") + flip_count >= GameState.EscapeVelocityGoal:
 			flip_count = GameState.EscapeVelocityGoal - Data.of("knife.rotations")
 			call_escape_velocity = true
+			if flip_count <= 0:
+				if Data.of("gamestate.escape_velocity_points_at_player") and is_knife_pointing_right():
+					stab()
+					return
+				elif not Data.of("gamestate.escape_velocity_points_at_player") and not is_knife_pointing_right():
+					stab()
+					return
+				$Knife.connect("finish_rotation", stab)
+				$Knife.set_pointing(Data.of("gamestate.escape_velocity_points_at_player"))
+				return
 	
 	knife_rotation_tween = create_tween()
 	var rolling_delay := 0.5 # rolling float to offset flips beyond the first
@@ -342,4 +369,9 @@ func _on_round_transition_end_reached() -> void:
 
 
 func _on_round_transition_middle_reached() -> void:
+	Data.change_by_int("gamestate.round_count", 1)
 	prepare_next_round()
+
+
+func _on_main_menu_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://systems/main_menu.tscn")

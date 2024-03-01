@@ -1,21 +1,25 @@
-[gd_scene load_steps=6 format=3 uid="uid://ctfgg0udfa2jc"]
+[gd_scene load_steps=4 format=3 uid="uid://ctfgg0udfa2jc"]
 
-[ext_resource type="Texture2D" uid="uid://d360s6g3ed1rm" path="res://game/visuals/button_normal.png" id="1_a2isi"]
 [ext_resource type="Script" path="res://game/action_button.gd" id="1_mulkx"]
-[ext_resource type="Texture2D" uid="uid://bun5riqsu4mbb" path="res://game/visuals/button_hover.png" id="2_gv028"]
-[ext_resource type="Texture2D" uid="uid://dtm8lfj87jswq" path="res://game/visuals/button_disabled.png" id="3_wnuvq"]
 [ext_resource type="Texture2D" uid="uid://baqu6hrmxcf0y" path="res://game/dice/pi/pi.png" id="5_omg10"]
 
-[node name="ActionButton" type="TextureButton"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sttam"]
+bg_color = Color(0.054902, 0.054902, 0.054902, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.894118, 0.894118, 0.894118, 1)
+
+[node name="ActionButton" type="Button"]
 offset_right = 40.0
 offset_bottom = 40.0
 focus_mode = 0
-texture_normal = ExtResource("1_a2isi")
-texture_hover = ExtResource("2_gv028")
-texture_disabled = ExtResource("3_wnuvq")
+theme_override_styles/normal = SubResource("StyleBoxFlat_sttam")
 script = ExtResource("1_mulkx")
 
 [node name="IconTexture" type="TextureRect" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 5.0
 offset_top = 5.0

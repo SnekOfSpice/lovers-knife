@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://crhlt8nq1168y"]
+
+[ext_resource type="Script" path="res://systems/sound.gd" id="1_0wpf0"]
+[ext_resource type="AudioStream" uid="uid://k2hb5q2bf6c2" path="res://game/sound/Daniel Birch - Spanish Guitar & Voice on Microcassette.ogg" id="2_abwp3"]
+
+[node name="Sound" type="Node"]
+script = ExtResource("1_0wpf0")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_abwp3")
+volume_db = -6.184
+autoplay = true

@@ -1,0 +1,30 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://cvey57ytjvvd7"]
+
+[ext_resource type="FontFile" uid="uid://d26ed0b8eleie" path="res://game/visuals/Verdana2.ttf" id="1_7coir"]
+[ext_resource type="FontFile" uid="uid://nrtg05070jya" path="res://game/visuals/MicroStyle.ttf" id="2_iedha"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1rd4f"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ms3g"]
+bg_color = Color(0.972549, 0.972549, 0.972549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wyekm"]
+bg_color = Color(0.0588235, 0.0588235, 0.0588235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_spe68"]
+
+[resource]
+Button/colors/font_disabled_color = Color(0.439216, 0.439216, 0.439216, 1)
+Button/colors/font_hover_color = Color(0.0156863, 0.0156863, 0.0156863, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/font_sizes/font_size = 44
+Button/fonts/font = ExtResource("1_7coir")
+Button/styles/disabled = SubResource("StyleBoxFlat_1rd4f")
+Button/styles/hover = SubResource("StyleBoxFlat_2ms3g")
+Button/styles/normal = SubResource("StyleBoxFlat_wyekm")
+Button/styles/pressed = SubResource("StyleBoxFlat_spe68")
+Label/font_sizes/font_size = 46
+Label/fonts/font = ExtResource("2_iedha")
+RichTextLabel/font_sizes/normal_font_size = 40
+RichTextLabel/fonts/normal_font = ExtResource("2_iedha")
