@@ -63,3 +63,5 @@ animations = [{
 [node name="Sprite" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_8x44u")
 script = ExtResource("2_7g7xd")
+
+[connection signal="frame_changed" from="." to="." method="_on_frame_changed"]

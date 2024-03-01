@@ -10,6 +10,7 @@ var start_right := false
 signal rolled(result:int)
 
 var launch := false
+var stop := false
 var finished_roll := false
 var launch_force:float
 var evaluated_faces:Array
@@ -30,6 +31,7 @@ func _ready() -> void:
 		#emit_signal("rolled", get_evaluated_faces().pick_random())
 
 var jitter_cooldown := 0.1
+var still_cooldown := 2.0
 func _process(delta: float) -> void:
 	#$Label.global_rotation = 0.0
 	if linear_velocity.length() == 0:
@@ -41,9 +43,19 @@ func _process(delta: float) -> void:
 		if jitter_cooldown <= 0:
 			$Label.text = str(evaluated_faces.pick_random())
 			jitter_cooldown = 0.1
+		if linear_velocity.length() < 1:
+			still_cooldown -= delta
+			if still_cooldown <= 0.0:
+				emit_roll()
+				stop = true
+		
 		
 
 func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
+	if stop:
+		linear_velocity = Vector2.ZERO
+		angular_velocity = 0.0
+		stop = false
 	if launch:
 		if start_right:
 			linear_velocity = Vector2(-launch_force, randf_range(-30, 30))

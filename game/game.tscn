@@ -114,46 +114,77 @@ position = Vector2(792, 474)
 [node name="BottomRight" type="Node2D" parent="DiceSpawnAreas/BoundsRight"]
 position = Vector2(776, 595)
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="Cheats" type="HBoxContainer" parent="."]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="GridContainer" type="GridContainer" parent="Cheats"]
+layout_mode = 2
 columns = 2
 
-[node name="D6" type="Button" parent="GridContainer"]
+[node name="D6" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "d6"
 
-[node name="D3" type="Button" parent="GridContainer"]
+[node name="D3" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "d3"
 
-[node name="Copy" type="Button" parent="GridContainer"]
+[node name="Copy" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "copy"
 
-[node name="Fib" type="Button" parent="GridContainer"]
+[node name="Fib" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "fibonacci"
 
-[node name="Pi" type="Button" parent="GridContainer"]
+[node name="Pi" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "pi"
 
-[node name="Turncount" type="Button" parent="GridContainer"]
+[node name="Turncount" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "turncount
 "
 
-[node name="DeleteDiceButton" type="Button" parent="GridContainer"]
+[node name="DeleteDiceButton" type="Button" parent="Cheats/GridContainer"]
 layout_mode = 2
 text = "del"
+
+[node name="GridContainer2" type="GridContainer" parent="Cheats"]
+layout_mode = 2
+
+[node name="AllOrNothing" type="Button" parent="Cheats/GridContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "All Or Nothing"
+
+[node name="Candle" type="Button" parent="Cheats/GridContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "candle"
+
+[node name="EscapeVelocity" type="Button" parent="Cheats/GridContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "escape vel"
+
+[node name="GraspOfFate" type="Button" parent="Cheats/GridContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "grasp of fate"
+
+[node name="Possession" type="Button" parent="Cheats/GridContainer2"]
+layout_mode = 2
+focus_mode = 0
+text = "possession"
 
 [node name="TurnCountLabel" type="Label" parent="."]
 layout_mode = 1
@@ -233,8 +264,13 @@ bbcode_enabled = true
 [connection signal="start_use_item" from="LoverL" to="." method="use_item"]
 [connection signal="start_rolling_dice" from="LoverR" to="." method="roll_dice"]
 [connection signal="start_use_item" from="LoverR" to="." method="use_item"]
-[connection signal="pressed" from="GridContainer/D6" to="." method="roll_dice"]
-[connection signal="pressed" from="GridContainer/DeleteDiceButton" to="." method="_on_delete_dice_button_pressed"]
+[connection signal="pressed" from="Cheats/GridContainer/D6" to="." method="roll_dice"]
+[connection signal="pressed" from="Cheats/GridContainer/DeleteDiceButton" to="." method="_on_delete_dice_button_pressed"]
+[connection signal="pressed" from="Cheats/GridContainer2/AllOrNothing" to="." method="use_item" binds= ["all_or_nothing"]]
+[connection signal="pressed" from="Cheats/GridContainer2/Candle" to="." method="use_item" binds= ["candle"]]
+[connection signal="pressed" from="Cheats/GridContainer2/EscapeVelocity" to="." method="use_item" binds= ["escape_velocity"]]
+[connection signal="pressed" from="Cheats/GridContainer2/GraspOfFate" to="." method="use_item" binds= ["grasp_of_fate"]]
+[connection signal="pressed" from="Cheats/GridContainer2/Possession" to="." method="use_item" binds= ["possession"]]
 [connection signal="end_reached" from="RoundTransition" to="." method="_on_round_transition_end_reached"]
 [connection signal="middle_reached" from="RoundTransition" to="." method="_on_round_transition_middle_reached"]
 [connection signal="pressed" from="EndTexture/RestartButton" to="." method="restart"]

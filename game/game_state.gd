@@ -2,6 +2,8 @@ extends Node
 
 var game:Game
 
+const EscapeVelocityGoal := 3
+
 var last_faces := []
 var dice_played_this_round := []
 

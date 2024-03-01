@@ -40,23 +40,6 @@ func _ready() -> void:
 	if is_player:
 		find_child("DiceContainer").alignment = BoxContainer.ALIGNMENT_END
 
-func show_action_label(action_button:ActionButton):
-	if action_button.action_type == ActionButton.Actions.Dice:
-		var description := ""
-		
-		var eval = GameState.get_evaluated_faces(action_button.tech_id)
-		for e in eval:
-			description += str(" [", e, "] ")
-		
-		description += str("\n", Data.dice_descriptions.get(action_button.tech_id, ""))
-		
-		find_child("ActionInfoLabel").text = description
-	elif action_button.action_type == ActionButton.Actions.Item:
-		find_child("ActionInfoLabel").text = Data.item_descriptions.get(action_button.tech_id, "")
-
-func hide_action_label():
-	find_child("ActionInfoLabel").text = ""
-
 func roll_dice(action_button:ActionButton):
 	var tech_id = action_button.tech_id
 	action_button.queue_free()
@@ -69,9 +52,6 @@ func add_to_dice_inventory(tech_id:String):
 	var button = preload("res://game/action_button.tscn").instantiate()
 	button.set_id(tech_id, button.Actions.Dice)
 	button.connect("pressed", roll_dice.bind(button))
-	button.connect("mouse_entered", show_action_label.bind(button))
-	button.connect("mouse_exited", hide_action_label)
-	button.connect("pressed", hide_action_label)
 	button.connect("set_info_text", GameState.game.set_info_text)
 	button.owned_by_player = is_player
 	find_child("DiceContainer").add_child(button)
@@ -83,9 +63,6 @@ func add_to_item_inventory(tech_id:String):
 	var button = preload("res://game/action_button.tscn").instantiate()
 	button.set_id(tech_id, button.Actions.Item)
 	button.connect("pressed", use_item.bind(button))
-	button.connect("mouse_entered", show_action_label.bind(button))
-	button.connect("mouse_exited", hide_action_label)
-	button.connect("pressed", hide_action_label)
 	button.connect("set_info_text", GameState.game.set_info_text)
 	button.owned_by_player = is_player
 	find_child("ItemContainer").add_child(button)

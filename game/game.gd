@@ -8,6 +8,8 @@ var round := 0
 var dice := ["copy", "d3", "d6", "fibonacci", "pi", "turncount"]
 var items := ["all_or_nothing", "grasp_of_fate", "escape_velocity", "possession", "candle"]
 
+var knife_rotation_tween:Tween
+
 func _ready() -> void:
 	GameState.game = self
 	Data.listen(self, "gamestate.turn_count")
@@ -19,6 +21,7 @@ func _ready() -> void:
 	Data.listen(self, "damage_right")
 	Data.listen(self, "damage_left")
 	Data.listen(self, "gamestate.can_input", true)
+	Data.listen(self, "knife.rotations", true)
 	
 	start_game()
 	$EndTexture.visible = false
@@ -42,6 +45,7 @@ func property_change(property: String, new_value, old_value):
 		"items.all_or_nothing":
 			find_child("StatusContainer").find_child("AllOrNothing").visible = new_value
 		"items.escape_velocity":
+			update_label()
 			find_child("StatusContainer").find_child("EscapeVelocity").visible = new_value
 		"items.grasp_of_fate":
 			find_child("StatusContainer").find_child("GraspOfFate").visible = new_value
@@ -53,6 +57,17 @@ func property_change(property: String, new_value, old_value):
 			update_label()
 			if new_value >= 2:
 				end_game()
+		"knife.rotations":
+			update_label()
+			if Data.of("items.escape_velocity") and new_value >= GameState.EscapeVelocityGoal:
+				knife_rotation_tween.stop()
+				if Data.of("gamestate.is_player_turn"):
+					$Knife.connect("finish_rotation", stab)
+					$Knife.set_pointing(false)
+				else:
+					$Knife.connect("finish_rotation", stab)
+					$Knife.set_pointing(true)
+				print("escape")
 		"gamestate.can_input":
 			pass
 
@@ -69,17 +84,22 @@ func get_current_lover():
 			return $LoverR
 
 func update_label():
-	find_child("TurnCountLabel").text = str(Data.of("gamestate.turn_count"), "/", Data.of("gamestate.goal_turn_count"))
-	find_child("TurnCountLabel").text += "\n"
-	find_child("TurnCountLabel").text += "Player on Evens" if Data.of("items.possession") else "Player on Odds"
-	find_child("TurnCountLabel").text += "\n"
+	var label :Label= find_child("TurnCountLabel")
+	label.text = str(Data.of("gamestate.turn_count"), "/", Data.of("gamestate.goal_turn_count"))
+	label.text += "\n"
+	label.text += "Player on Evens" if Data.of("items.possession") else "Player on Odds"
+	label.text += "\n"
+	label.text += str(Data.of("knife.rotations"))
+	if Data.of("items.escape_velocity"):
+		label.text += str(" (", "Escaping at ", GameState.EscapeVelocityGoal, ")")
+	label.text += "\n"
 	var damage_string := ""
 	for i in Data.of("damage_left"):
 		damage_string += "X"
 	damage_string += "|"
 	for i in Data.of("damage_right"):
 		damage_string += "X"
-	find_child("TurnCountLabel").text += damage_string
+	label.text += damage_string
 
 func end_game():
 	$EndTexture.visible = true
@@ -106,6 +126,7 @@ func start_game():
 
 func start_round():
 	Data.apply("gamestate.turn_count", 0)
+	Data.apply("knife.rotations", 0)
 	start_turn()
 
 func distribute_dice():
@@ -197,7 +218,7 @@ func use_item(tech_id:String):
 		"all_or_nothing":
 			Data.apply("items.all_or_nothing", true)
 		"escape_velocity":
-			pass
+			Data.apply("items.escape_velocity", true)
 		"candle":
 			Data.change_by_int("gamestate.goal_turn_count", 1)
 		"grasp_of_fate":
@@ -210,37 +231,43 @@ func set_info_text(text:String):
 	$InfoTextLabel.text = str("[center]", text, "[/center]")
 
 func spin_knife(flip_count:int):
-	var t = create_tween()
+	var call_escape_velocity:=false
+	if Data.of("items.escape_velocity"):
+		if Data.of("knife.rotations") + flip_count >= GameState.EscapeVelocityGoal:
+			flip_count = GameState.EscapeVelocityGoal - Data.of("knife.rotations")
+			call_escape_velocity = true
+	
+	knife_rotation_tween = create_tween()
 	var rolling_delay := 0.5 # rolling float to offset flips beyond the first
-	t.set_parallel(true)
+	knife_rotation_tween.set_parallel(true)
 	var start_pointing_right = is_knife_pointing_right()
 	if Data.of("items.all_or_nothing"):
 		if is_even(flip_count):
 			if not start_pointing_right:
-				t.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
+				knife_rotation_tween.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
 				#t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
 		else:
 			if start_pointing_right:
-				t.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
+				knife_rotation_tween.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
 				#t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
 	else:
 		for i in flip_count:
 			if start_pointing_right:
 				if is_even(i):
-					t.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
+					knife_rotation_tween.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
 					#t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
 				else:
-					t.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
+					knife_rotation_tween.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
 					#t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
 			else:
 				if is_even(i):
-					t.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
+					knife_rotation_tween.tween_callback($Knife.set_pointing.bind(true)).set_delay(rolling_delay)
 					#t.tween_property($Knife, "rotation", 0, flip_duration).set_delay(rolling_delay)
 				else:
-					t.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
+					knife_rotation_tween.tween_callback($Knife.set_pointing.bind(false)).set_delay(rolling_delay)
 					#t.tween_property($Knife, "rotation", -PI, flip_duration).set_delay(rolling_delay)
 			rolling_delay += 2 * $Knife.get_flip_duration_sec()
-	t.tween_callback(post_spin_evaluation.bind(flip_count)).set_delay(rolling_delay)
+	knife_rotation_tween.tween_callback(post_spin_evaluation.bind(flip_count)).set_delay(rolling_delay)
 
 func reset_after_spin():
 	Data.apply("items.grasp_of_fate", false)
@@ -264,6 +291,8 @@ func post_spin_evaluation(flip_count:int):
 		start_turn()
 
 func stab():
+	if $Knife.is_connected("finish_rotation", stab):
+		$Knife.disconnect("finish_rotation", stab)
 	var goalPos :Vector2= $Knife.position
 	var t = create_tween()
 	if is_knife_pointing_right():
