@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://cooiohvcufb2p"]
+
+[ext_resource type="Script" path="res://systems/main_menu.gd" id="1_wyxql"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wyxql")
+
+[node name="TextureRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="SinglePlayerButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 170.0
+offset_right = 260.0
+offset_bottom = 201.0
+focus_mode = 0
+text = "1P"
+
+[node name="MultiplayerButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 887.0
+offset_top = 170.0
+offset_right = 914.0
+offset_bottom = 201.0
+focus_mode = 0
+text = "2P"
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 571.0
+offset_top = 423.0
+offset_right = 612.0
+offset_bottom = 454.0
+focus_mode = 0
+text = "Sink"
+
+[connection signal="pressed" from="SinglePlayerButton" to="." method="start_game" binds= [true]]
+[connection signal="pressed" from="MultiplayerButton" to="." method="start_game" binds= [false]]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]

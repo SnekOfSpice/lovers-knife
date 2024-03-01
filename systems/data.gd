@@ -35,6 +35,8 @@ func _ready() -> void:
 	apply("items.grasp_of_fate", false)
 	apply("items.escape_velocity", false)
 	apply("gamestate.can_input", false)
+	apply("gamestate.right_active", false)
+	apply("gamestate.left_active", false)
 	apply("knife.rotations", 0)
 
 func listen(listener:Node, property:String, immediate_callback:=false):

@@ -12,6 +12,7 @@ var knife_rotation_tween:Tween
 
 func _ready() -> void:
 	GameState.game = self
+	Data.apply("game.singleplayer", false)
 	Data.listen(self, "gamestate.turn_count")
 	Data.listen(self, "gamestate.goal_turn_count")
 	Data.listen(self, "items.possession", true)
@@ -118,6 +119,8 @@ func prepare_next_round():
 	$LoverR.erase_all_dice()
 
 func start_game():
+	Data.apply("damage_left", 0)
+	Data.apply("damage_right", 0)
 	GameState.reset_between_rounds()
 	# auto start in first round, in subsequent rounds the transition will call this instead
 	prepare_next_round()
@@ -161,7 +164,10 @@ func start_turn():
 	if Data.of("gamestate.is_player_turn"):
 		Data.apply("gamestate.can_input", true)
 	else:
-		$LoverL.do_stuff()
+		if Data.of("game.singleplayer"):
+			$LoverL.do_stuff()
+		else:
+			Data.apply("gamestate.can_input", true)
 
 func refill_dice(lover:Lover):
 	var unheld = get_unheld_dice_ids()
@@ -229,6 +235,25 @@ func is_knife_pointing_right() -> bool:
 
 func set_info_text(text:String):
 	$InfoTextLabel.text = str("[center]", text, "[/center]")
+
+func clear_info_text():
+	set_info_text("")
+	$DiceInfoL.text = ""
+	$DiceInfoR.text = ""
+
+func set_dice_info_texts(tech_id:String):
+	$InfoTextLabel.text = str("[center]", Data.dice_descriptions.get(tech_id, ""), "[/center]")
+	
+	var eval = GameState.get_evaluated_faces(tech_id)
+	var text_l := ""
+	var text_r := ""
+	for e in eval:
+		if (is_knife_pointing_right() and e % 2 == 0) or (not is_knife_pointing_right() and e % 2 == 1):
+			text_r += str(" [", e, "] ")
+		elif (is_knife_pointing_right() and e % 2 == 1) or (not is_knife_pointing_right() and e % 2 == 0):
+			text_l += str(" [", e, "] ")
+	$DiceInfoL.text = str("[center]", text_l, "[/center]")
+	$DiceInfoR.text = str("[center]", text_r, "[/center]")
 
 func spin_knife(flip_count:int):
 	var call_escape_velocity:=false

@@ -82,7 +82,7 @@ shape = SubResource("RectangleShape2D_88srw")
 [node name="StaticBody2D3" type="StaticBody2D" parent="DiceTray"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DiceTray/StaticBody2D3"]
-position = Vector2(274, 527.399)
+position = Vector2(313, 526)
 rotation = 1.55966
 shape = SubResource("RectangleShape2D_rrry6")
 
@@ -90,7 +90,7 @@ shape = SubResource("RectangleShape2D_rrry6")
 position = Vector2(578, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DiceTray/StaticBody2D4"]
-position = Vector2(274, 527.399)
+position = Vector2(228, 527)
 rotation = 1.55966
 shape = SubResource("RectangleShape2D_rrry6")
 
@@ -119,43 +119,78 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="GridContainer" type="GridContainer" parent="Cheats"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Cheats"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Cheats/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="D6" type="Button" parent="Cheats/GridContainer"]
+[node name="D6_left" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "d6"
 
-[node name="D3" type="Button" parent="Cheats/GridContainer"]
+[node name="D6_right" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "d6"
+
+[node name="D3_left" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "d3"
 
-[node name="Copy" type="Button" parent="Cheats/GridContainer"]
+[node name="D3_right" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "d3"
+
+[node name="Copy_left" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "copy"
 
-[node name="Fib" type="Button" parent="Cheats/GridContainer"]
+[node name="Copy_right" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "copy"
+
+[node name="Fibonacci_left" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "fibonacci"
 
-[node name="Pi" type="Button" parent="Cheats/GridContainer"]
+[node name="Fibonacci_right" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "fibonacci"
+
+[node name="Pi_left" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "pi"
 
-[node name="Turncount" type="Button" parent="Cheats/GridContainer"]
+[node name="Pi_right" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "pi"
+
+[node name="Turncount_left" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "turncount
 "
 
-[node name="DeleteDiceButton" type="Button" parent="Cheats/GridContainer"]
+[node name="Turncount_right" type="Button" parent="Cheats/VBoxContainer/GridContainer"]
 layout_mode = 2
+focus_mode = 0
+text = "turncount
+"
+
+[node name="DeleteDiceButton" type="Button" parent="Cheats/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "del"
 
 [node name="GridContainer2" type="GridContainer" parent="Cheats"]
@@ -260,12 +295,30 @@ offset_right = 842.0
 offset_bottom = 608.0
 bbcode_enabled = true
 
+[node name="DiceInfoL" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(130, 40)
+layout_mode = 0
+offset_left = 388.0
+offset_top = 398.0
+offset_right = 518.0
+offset_bottom = 438.0
+bbcode_enabled = true
+
+[node name="DiceInfoR" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(130, 40)
+layout_mode = 0
+offset_left = 768.0
+offset_top = 398.0
+offset_right = 898.0
+offset_bottom = 438.0
+bbcode_enabled = true
+
 [connection signal="start_rolling_dice" from="LoverL" to="." method="roll_dice"]
 [connection signal="start_use_item" from="LoverL" to="." method="use_item"]
 [connection signal="start_rolling_dice" from="LoverR" to="." method="roll_dice"]
 [connection signal="start_use_item" from="LoverR" to="." method="use_item"]
-[connection signal="pressed" from="Cheats/GridContainer/D6" to="." method="roll_dice"]
-[connection signal="pressed" from="Cheats/GridContainer/DeleteDiceButton" to="." method="_on_delete_dice_button_pressed"]
+[connection signal="pressed" from="Cheats/VBoxContainer/GridContainer/D6_left" to="." method="roll_dice" binds= ["d6", false]]
+[connection signal="pressed" from="Cheats/VBoxContainer/DeleteDiceButton" to="." method="_on_delete_dice_button_pressed"]
 [connection signal="pressed" from="Cheats/GridContainer2/AllOrNothing" to="." method="use_item" binds= ["all_or_nothing"]]
 [connection signal="pressed" from="Cheats/GridContainer2/Candle" to="." method="use_item" binds= ["candle"]]
 [connection signal="pressed" from="Cheats/GridContainer2/EscapeVelocity" to="." method="use_item" binds= ["escape_velocity"]]
